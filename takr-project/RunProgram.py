@@ -1,3 +1,0 @@
-from ConsoleUserInterface import ConsoleUserInterface
-
-ConsoleUserInterface()
