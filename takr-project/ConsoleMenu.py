@@ -5,7 +5,7 @@ class ConsoleMenu:
     def __init__(self):
         self.__menu()
 
-# metoda
+    # main menu
     def __menu(self):
         menu = None
         while True:
