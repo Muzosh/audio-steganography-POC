@@ -12,7 +12,8 @@ class ConsoleMenu:
             try:
                 menu = int(input("MAIN MENU:\n1: Encode\n2: Decode\n3: Exit\nYour choice: "))
             except ValueError:
-                print("ValueError - incorrect input - you have to use number in range 1-3 as written in main menu.")
+                print(
+                    "ValueError - incorrect input - you have to use number in range 1-3 as written in main menu.\n\n\n")
 
             if menu == 1:
                 self.__encodeMethod()
@@ -25,6 +26,21 @@ class ConsoleMenu:
 
     def __encodeMethod(self):
         bc = BitConvertor()
-        audioFile = input("Write the path of audio file: ")
-        print("You can use %d characters for your secret message" % bc.countMessageLength(audioFile))
+        audioFile = input("Write the path of audio file: ") # ke konci mozna poresit otevirani fileExploreru
+        maxLength = bc.countMessageLength(audioFile)
 
+        message = input(
+            "\n\nYou can use %d characters for your secret message.\nPlease, write your message: " % maxLength)
+
+        while len(message) > maxLength:
+            message = input(
+                "\n\nYour message is longer than limit. Please write new message with max %d characters:\n" % maxLength)
+
+        if bc.encodeMessageIntoFile(message):
+            print(
+                "\n\nMessage encoding into audio file was successful! "
+                "Your new audio file is located in the same folder as original file.\n") # poresit prehravani zvuku rovnou v programu? (pujde to bez GUI?)
+        else:
+            print("Message encoding was not successful.")
+            # tohle by jsme meli poresit tak, aby teoreticky nikdy nemohlo nastat
+            # cili aby ta metoda nikdy nevratila false, poresit vse uz v metode (v pripade chyby vyhodit napr exception, ne vracet false)
