@@ -10,6 +10,6 @@ class BitConvertor:
         # zaroven doplnit zde atribut usableBits, ktery bude pouzit v dalsi metode
         return 5 # zde bude vracen počet charakterů pro skrytou zprávu - bacha, ne vracet usableBits, ale pocet charakteru (usableBits/8)
 
-    def encodeMessageIntoFile(self, message):
+    def encodeMessageIntoCoverFile(self, message):
         # za pouziti promenne filePath a usableBits (ve ktere uz urcite nejaka cesta je z minule metody) implementovat sifrovani
         return True

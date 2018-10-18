@@ -26,7 +26,7 @@ class ConsoleMenu:
 
     def __encodeMethod(self):
         bc = BitConvertor()
-        audioFile = input("Write the path of audio file: ") # ke konci mozna poresit otevirani fileExploreru
+        audioFile = input("Write the path of audio file: ")  # ke konci mozna poresit otevirani fileExploreru
         maxLength = bc.countMessageLength(audioFile)
 
         message = input(
@@ -36,11 +36,12 @@ class ConsoleMenu:
             message = input(
                 "\n\nYour message is longer than limit. Please write new message with max %d characters:\n" % maxLength)
 
-        if bc.encodeMessageIntoFile(message):
+        if bc.encodeMessageIntoCoverFile(message):
             print(
                 "\n\nMessage encoding into audio file was successful! "
-                "Your new audio file is located in the same folder as original file.\n") # poresit prehravani zvuku rovnou v programu? (pujde to bez GUI?)
+                "Your new audio file is located in the same folder as original file.\n")  # poresit prehravani zvuku rovnou v programu? (pujde to bez GUI?)
         else:
             print("Message encoding was not successful.")
             # tohle by jsme meli poresit tak, aby teoreticky nikdy nemohlo nastat
             # cili aby ta metoda nikdy nevratila false, poresit vse uz v metode (v pripade chyby vyhodit napr exception, ne vracet false)
+            # melo by to byt tak, ze pokud vrati false, tak je to nase chyba, ze jsme tu chybu neporesili uz uvnitr te metody
