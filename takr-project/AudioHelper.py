@@ -1,5 +1,3 @@
-import wave
-import audioop
 import binascii
 import os
 
