@@ -33,7 +33,7 @@ class BitConvertor:
         else:
             encryptedFileBits = coverFileBits
 
-        # encryptedFileBits bude finální list bitů, zbývá jej převést zpět na zvukový soubor
+        # encryptedFileBits bude finální list bitů, zbývá jej převést zpět na zvukový soubor a uložit
         # na konec poresit return
         return True
 
