@@ -12,3 +12,5 @@ with file:
         binary = bin(decimal)[2:].zfill(8)
         #print("hex: %s, decimal: %s, binary: %s" % (hexadecimal, decimal, binary))
         print( "binary: %s" % binary)
+
+print(bin(10000))
