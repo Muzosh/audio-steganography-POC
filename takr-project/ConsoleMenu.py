@@ -28,7 +28,9 @@ class ConsoleMenu:
         mh = MessageHelper()
         ah = AudioHelper()
         audioFile = input("Write the path of audio file: ")  # ke konci mozna poresit otevirani fileExploreru
-        maxLength = ah.countMessageLength(audioFile)
+        maxLength = 5 #ah.countMessageLength(audioFile)
+
+        ah.convertAudioToBinary("ahfchb")
 
         message = input(
             "\n\nYou can use %d characters for your secret message.\nPlease, write your message: " % maxLength)

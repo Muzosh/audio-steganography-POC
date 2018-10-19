@@ -1,16 +1,24 @@
 import wave
 import audioop
+import binascii
+import os
 
 class AudioHelper:
 
-    def convertAudioToBinary(self):
-        
+    def convertAudioToBinary(self, filePath):
+        file = open(filePath, "rb")
+        with file:
+            contentOfAudio = file.read()
+            hexadecimal = binascii.hexlify(contentOfAudio)
+            decimal = int(hexadecimal, 16)
+            binaryStringAudio = bin(decimal)[2:].zfill(8)
+
+            audioBitList=[]
+            for bit in binaryStringAudio:
+                audioBitList.append(bit)
+
         return audioBitList
 
     def countMessageLength(self, filePath):
-        # self.filePath = filePath
-        # zde bude kód pro zjištění maximální délky
-        # zaroven doplnit zde atribut usableBits, ktery bude pouzit v dalsi metode
-        return 5  # zde bude vracen počet charakterů pro skrytou zprávu - bacha, ne vracet usableBits, ale pocet charakteru (usableBits/8)
-
-
+        lengthOfAudio = os.path.getsize(filePath)
+        return int(lengthOfAudio - 2)
