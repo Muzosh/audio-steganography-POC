@@ -1,21 +1,23 @@
+from AudioHelper import AudioHelper
+
 class MessageHelper:
 
     def __init__(self):
-        self.filePath = ""
-        self.usableBits = 0
+        self.ah = AudioHelper()
 
 
     def encodeMessageIntoCoverFile(self, message):
 
         messageBits = self.tobits(message)
-
+        coverFileBits = self.ah.convertAudioToBinary
         # zde vytvorit list bitu coverFileBits z původního zvukového souboru
         # pro test je to zatím naplněné random hodnotama
 
-        coverFileBits = [0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1]
+        #coverFileBits = [0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1]
         indexCoverFileBits = 0 #
         indexMessageBits = 0
 
+        # pořešit ještě vkládání
         # implementováno vkládání bitů na každou osmou pozici
         for bit in coverFileBits:
 
