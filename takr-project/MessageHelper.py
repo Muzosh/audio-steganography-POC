@@ -1,26 +1,23 @@
-class BitConvertor:
+from AudioHelper import AudioHelper
+
+class MessageHelper:
 
     def __init__(self):
-        self.filePath = ""
-        self.usableBits = 0
+        self.ah = AudioHelper()
 
-    def countMessageLength(self, filePath):
-        self.filePath = filePath
-        # zde bude kód pro zjištění maximální délky
-        # zaroven doplnit zde atribut usableBits, ktery bude pouzit v dalsi metode
-        return 5  # zde bude vracen počet charakterů pro skrytou zprávu - bacha, ne vracet usableBits, ale pocet charakteru (usableBits/8)
 
     def encodeMessageIntoCoverFile(self, message):
 
         messageBits = self.tobits(message)
-
+        coverFileBits = self.ah.convertAudioToBinary
         # zde vytvorit list bitu coverFileBits z původního zvukového souboru
         # pro test je to zatím naplněné random hodnotama
 
-        coverFileBits = [0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1]
+        #coverFileBits = [0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1]
         indexCoverFileBits = 0 #
         indexMessageBits = 0
 
+        # pořešit ještě vkládání
         # implementováno vkládání bitů na každou osmou pozici
         for bit in coverFileBits:
 
