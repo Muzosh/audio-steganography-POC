@@ -4,7 +4,8 @@ import audioop
 class AudioHelper:
 
     def convertAudioToBinary(self):
-        return
+        
+        return audioBitList
 
     def countMessageLength(self, filePath):
         # self.filePath = filePath
