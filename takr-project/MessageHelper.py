@@ -9,7 +9,7 @@ class MessageHelper:
     def __init__(self):
         self.ah = AudioHelper()
 
-    def encodeMessageIntoCoverFile(self, message, maxLength, filePath):
+    def encodeMessageIntoCoverFile(self, message, filePath):
         """
         Method for encoding message into cover file (audio file).
         Using method LSB - Last Significant Bit.
@@ -23,48 +23,46 @@ class MessageHelper:
         coverFileBits = self.ah.convertAudioToBinary(filePath)
         messageLength = len(message)
 
+        # - Metoda sloužící pro zobrazení prefixu v bitech (např. 00000000000000000000000000000100)
+        # print("{0:032b}".format(messageLength))
+
+        # přidání prefixu na začátek audio zprávy v bitech + přidání postfixu (= NULL v ascii kódu = 8x '0')
         indexMaxLength = 0
-        print("{0:032b}".format(messageLength))
         for bit in "{0:032b}".format(messageLength):
             messageBits.insert(indexMaxLength, int(bit))
-            if indexMaxLength != 31:
-                indexMaxLength += 1
+            indexMaxLength += 1
+        messageBits.extend([0, 0, 0, 0, 0, 0, 0, 0])
 
-        print(messageBits)  # po to místo je to dobře
+        # - Metoda sloužící pro zobrazení listu zprávy v bitech, kterou bude potřeba zašifrovat do audiofile
+        #  (např. [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,...])
+        # print(messageBits)
 
-        # indexCoverFileBits = 0
-        # indexMessageBits = 0
-        #
-        # for bit in coverFileBits:
-        #
-        #     if (indexCoverFileBits + 1) % 8 == 0:
-        #         bit = messageBits[indexMessageBits]
-        #         indexMessageBits += 1
-        #         if indexMessageBits == len(messageBits) - 1:
-        #             break
-        #
-        #     indexCoverFileBits += 1
+        # - Metoda pro zobrazení prvních (500) bitů v původním audioFile v bitech
+        # (např. [1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0,...])
+        # string = []
+        # for x in range(500):
+        #     string.append(coverFileBits[x])
+        # print(string)
 
-        # i = 0
-        # j = 0
-        #
-        # for bit in coverFileBits:
-        #     if (i + 1) % 8 == 0:
-        #         bit = messageBits[j]
-        #         j += 1
-        #     if i == len(message) * 8 + 32 - 1:
-        #         break
-        #     i += 1
+        # zapsání zprávy v bitech na každou osmou pozici do audioFile v bitech
+        i = 1
+        for bit in messageBits:
+            coverFileBits[(i * 8) - 1] = bit
+            i += 1
 
         embeddedFileBits = coverFileBits
 
-        index = 0
-        for x in embeddedFileBits:
-            if (index + 1) % 8 == 0:
-                print(x)
-            if index == 100000:
-                break
-            index += 1
+        # - Metoda sloužící k vypsání prvních (1200) osmých bitů ve finální audioFile v bitech
+        # (např.[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ...])
+        # string2 = []
+        # i = 1
+        # for bit in coverFileBits:
+        #     if (i + 1) % 8 == 0:
+        #         string2.append(embeddedFileBits[i])
+        #     if i == 1200:
+        #         break
+        #     i += 1
+        # print(string2)
 
         # encryptedFileBits bude finální list bitů, zbývá jej převést zpět na zvukový soubor a uložit
         # na konec poresit return

@@ -27,10 +27,9 @@ class ConsoleMenu:
     def __encodeMethod(self):
         mh = MessageHelper()
         ah = AudioHelper()
-        audioFilePath = input("Write the path of audio file: ")  # ke konci mozna poresit otevirani fileExploreru
+        audioFilePath = input("Write the path of audio file: pro test stačí jen enter teď")  # ke konci mozna poresit otevirani fileExploreru
+        audioFilePath = "song.mp3"
         maxLength = ah.countMessageLength(audioFilePath)
-
-        #ah.convertAudioToBinary("ahfchb")
 
         message = input(
             "\n\nYou can use %d characters for your secret message.\nPlease, write your message: " % maxLength)
@@ -39,7 +38,7 @@ class ConsoleMenu:
             message = input(
                 "\n\nYour message is longer than limit. Please write new message with max %d characters:\n" % maxLength)
 
-        if mh.encodeMessageIntoCoverFile(message, maxLength, audioFilePath):
+        if mh.encodeMessageIntoCoverFile(message, audioFilePath):
             print(
                 "\n\nMessage encoding into audio file was successful! "
                 "Your new audio file is located in the same folder as original file.\n")  # poresit prehravani zvuku rovnou v programu? (pujde to bez GUI?)
