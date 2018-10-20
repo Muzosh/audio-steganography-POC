@@ -1,12 +1,23 @@
 from AudioHelper import AudioHelper
 
 class MessageHelper:
+    """
+    Class for methods of message input.
+    """
 
     def __init__(self):
         self.ah = AudioHelper()
 
 
     def encodeMessageIntoCoverFile(self, message):
+        """
+        Method for encoding message into cover file (audio file).
+        Using method LSB - Last Significant Bit.
+        Replace each eighth bit in audio file by bit of message.
+
+        :param message:
+        :return:
+        """
 
         messageBits = self.tobits(message)
         coverFileBits = self.ah.convertAudioToBinary
@@ -14,7 +25,7 @@ class MessageHelper:
         # pro test je to zatím naplněné random hodnotama
 
         #coverFileBits = [0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1]
-        indexCoverFileBits = 0 #
+        indexCoverFileBits = 0
         indexMessageBits = 0
 
         # pořešit ještě vkládání
@@ -35,6 +46,12 @@ class MessageHelper:
         return True
 
     def tobits(self, str):
+        """
+        Auxiliary method for converting message - string to bits.
+
+        :param str:
+        :return result --> list of bits:
+        """
         result = []
         for c in str:
             bits = bin(ord(c))[2:]
@@ -43,6 +60,12 @@ class MessageHelper:
         return result
 
     def frombits(self, bits):
+        """
+        Reverse method for converting bits of message back to string
+
+        :param bits:
+        :return message string:
+        """
         chars = []
         for b in range(int(len(bits) / 8)):
             byte = bits[b * 8:(b + 1) * 8]
