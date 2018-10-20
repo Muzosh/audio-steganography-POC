@@ -1,30 +1,32 @@
 from AudioHelper import AudioHelper
 
+
 class MessageHelper:
 
     def __init__(self):
         self.ah = AudioHelper()
 
-
-    def encodeMessageIntoCoverFile(self, message):
+    def encodeMessageIntoCoverFile(self, message, maxLength):
 
         messageBits = self.tobits(message)
         coverFileBits = self.ah.convertAudioToBinary
-        # zde vytvorit list bitu coverFileBits z původního zvukového souboru
-        # pro test je to zatím naplněné random hodnotama
+        # coverFileBits = [0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1]
 
-        #coverFileBits = [0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1]
-        indexCoverFileBits = 0 #
+        indexMaxLenght = 0
+
+        for bit in "{0:032b}".format(maxLength):
+            messageBits.insert(indexMaxLenght, int(bit))
+            indexMaxLenght += 1
+
+
+        indexCoverFileBits = 0
         indexMessageBits = 0
 
-        # pořešit ještě vkládání
-        # implementováno vkládání bitů na každou osmou pozici
         for bit in coverFileBits:
 
             if (indexCoverFileBits + 1) % 8 == 0:
                 bit = messageBits[indexMessageBits]
                 indexMessageBits += 1
-                print(bit)
 
             indexCoverFileBits += 1
         else:
