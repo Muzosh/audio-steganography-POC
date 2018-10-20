@@ -1,6 +1,7 @@
 import binascii
 import os
 
+
 class AudioHelper:
     """
     Class AudioHelper contain methods which work with cover file (audio file).
@@ -20,13 +21,12 @@ class AudioHelper:
             decimal = int(hexadecimal, 16)
             binaryStringAudio = bin(decimal)[2:].zfill(8)
 
-            audioBitList=[]
+            audioBitList = []
             for bit in binaryStringAudio:
                 audioBitList.append(bit)
-        #except
 
         return audioBitList
 
     def countMessageLength(self, filePath):
         lengthOfAudio = os.path.getsize(filePath)
-        return int(lengthOfAudio - 4)
+        return int((lengthOfAudio / 8) - 4)

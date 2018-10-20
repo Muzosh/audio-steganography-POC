@@ -1,1 +1,1 @@
-print("{0:032b}".format(1000000))
+print("{0:032b}".format(4))

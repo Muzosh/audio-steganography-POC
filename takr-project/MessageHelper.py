@@ -9,7 +9,7 @@ class MessageHelper:
     def __init__(self):
         self.ah = AudioHelper()
 
-    def encodeMessageIntoCoverFile(self, message, maxLength):
+    def encodeMessageIntoCoverFile(self, message, maxLength, filePath):
         """
         Method for encoding message into cover file (audio file).
         Using method LSB - Last Significant Bit.
@@ -20,27 +20,51 @@ class MessageHelper:
         """
 
         messageBits = self.tobits(message)
-        coverFileBits = self.ah.convertAudioToBinary
-        # coverFileBits = [0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1]
+        coverFileBits = self.ah.convertAudioToBinary(filePath)
+        messageLength = len(message)
 
-        indexMaxLenght = 0
+        indexMaxLength = 0
+        print("{0:032b}".format(messageLength))
+        for bit in "{0:032b}".format(messageLength):
+            messageBits.insert(indexMaxLength, int(bit))
+            if indexMaxLength != 31:
+                indexMaxLength += 1
 
-        for bit in "{0:032b}".format(maxLength):
-            messageBits.insert(indexMaxLenght, int(bit))
-            indexMaxLenght += 1
+        print(messageBits)  # po to místo je to dobře
 
-        indexCoverFileBits = 0
-        indexMessageBits = 0
+        # indexCoverFileBits = 0
+        # indexMessageBits = 0
+        #
+        # for bit in coverFileBits:
+        #
+        #     if (indexCoverFileBits + 1) % 8 == 0:
+        #         bit = messageBits[indexMessageBits]
+        #         indexMessageBits += 1
+        #         if indexMessageBits == len(messageBits) - 1:
+        #             break
+        #
+        #     indexCoverFileBits += 1
 
-        for bit in coverFileBits:
+        # i = 0
+        # j = 0
+        #
+        # for bit in coverFileBits:
+        #     if (i + 1) % 8 == 0:
+        #         bit = messageBits[j]
+        #         j += 1
+        #     if i == len(message) * 8 + 32 - 1:
+        #         break
+        #     i += 1
 
-            if (indexCoverFileBits + 1) % 8 == 0:
-                bit = messageBits[indexMessageBits]
-                indexMessageBits += 1
+        embeddedFileBits = coverFileBits
 
-            indexCoverFileBits += 1
-        else:
-            encryptedFileBits = coverFileBits
+        index = 0
+        for x in embeddedFileBits:
+            if (index + 1) % 8 == 0:
+                print(x)
+            if index == 100000:
+                break
+            index += 1
 
         # encryptedFileBits bude finální list bitů, zbývá jej převést zpět na zvukový soubor a uložit
         # na konec poresit return
