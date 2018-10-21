@@ -33,7 +33,7 @@ class MessageHelper:
             indexMaxLength += 1
         messageBits.extend([0, 0, 0, 0, 0, 0, 0, 0])
 
-        # - Metoda sloužící pro zobrazení listu zprávy v bitech, kterou bude potřeba zašifrovat do audiofile
+        # - Metoda sloužící pro zobrazení listu zprávy (i s pre/postfixem) v bitech, kterou bude potřeba zašifrovat do audiofile
         #  (např. [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,...])
         # print(messageBits)
 
