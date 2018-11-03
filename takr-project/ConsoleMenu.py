@@ -1,5 +1,7 @@
 from MessageHelper import MessageHelper
 from AudioHelper import AudioHelper
+import tkinter as tk
+from tkinter import filedialog
 
 class ConsoleMenu:
     def __init__(self):
@@ -27,8 +29,15 @@ class ConsoleMenu:
     def __encodeMethod(self):
         mh = MessageHelper()
         ah = AudioHelper()
-        audioFilePath = input("Write the path of audio file: pro test stačí jen enter teď")  # ke konci mozna poresit otevirani fileExploreru
-        audioFilePath = "song.mp3"
+        #audioFilePath  = input(
+        #    "Write the path of audio file: pro test stačí jen enter teď")  # ke konci mozna poresit otevirani fileExploreru
+
+        root = tk.Tk()
+        root.withdraw()
+
+        audioFilePath = filedialog.askopenfilename()
+
+        #audioFilePath = "song.mp3"
         maxLength = ah.countMessageLength(audioFilePath)
 
         message = input(
