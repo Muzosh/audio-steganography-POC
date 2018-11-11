@@ -23,7 +23,7 @@ class MessageHelper:
         coverFileBits = self.ah.convertAudioToBinary(filePath)
         messageLength = len(message)
 
-        # - Metoda sloužící pro zobrazení prefixu v bitech (např. 00000000000000000000000000000100)
+        # Pro kontrolu - Metoda sloužící pro zobrazení prefixu v bitech (např. 00000000000000000000000000000100)
         # print("{0:032b}".format(messageLength))
 
         # přidání prefixu na začátek audio zprávy v bitech + přidání postfixu (= NULL v ascii kódu = 8x '0')
@@ -33,11 +33,11 @@ class MessageHelper:
             indexMaxLength += 1
         messageBits.extend([0, 0, 0, 0, 0, 0, 0, 0])
 
-        # - Metoda sloužící pro zobrazení listu zprávy (i s pre/postfixem) v bitech, kterou bude potřeba zašifrovat do audiofile
+        # Pro kontrolu - Metoda sloužící pro zobrazení listu zprávy (i s pre/postfixem) v bitech, kterou bude potřeba zašifrovat do audiofile
         #  (např. [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,...])
         # print(messageBits)
 
-        # - Metoda pro zobrazení prvních (500) bitů v původním audioFile v bitech
+        # Pro kontrolu - Metoda pro zobrazení prvních (500) bitů v původním audioFile v bitech
         # (např. [1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0,...])
         # string = []
         # for x in range(500):
@@ -50,9 +50,9 @@ class MessageHelper:
             coverFileBits[(i * 8) - 1] = bit
             i += 1
 
-        embeddedFileBits = coverFileBits
-
-        # - Metoda sloužící k vypsání prvních (1200) osmých bitů ve finální audioFile v bitech
+        encryptedFileBits = coverFileBits
+        # Pro kontrolu - Metoda sloužící k vypsání prvních (1200) osmých bitů ve finální audioFile v bitech
+        # Mělo by tedy být stejné jako původní messageBits
         # (např.[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ...])
         # string2 = []
         # i = 1
@@ -64,9 +64,12 @@ class MessageHelper:
         #     i += 1
         # print(string2)
 
-        # encryptedFileBits bude finální list bitů, zbývá jej převést zpět na zvukový soubor a uložit
-        # na konec poresit return
-        return True
+        return self.ah.convertBinaryToAudio(encryptedFileBits, filePath)
+
+    def decodeMessageFromCoverFile(self, coverFilePath):
+        message = "my message"
+        coverFilePath = self.ah.convertAudioToBinary(coverFilePath)
+        return message
 
     def tobits(self, str):
         """
