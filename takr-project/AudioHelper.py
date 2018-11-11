@@ -25,24 +25,17 @@ class AudioHelper:
             for bit in binaryStringAudio:
                 audioBitList.append(bit)
 
-            # Stejný for, jako nahoře, ale zobrazuje i progress - bohužel mi to přijde trošku pomalejší
-            # i = 0
-            # for bit in binaryStringAudio:
-            #     if i == 0:
-            #         print("Progress: 0%")
-            #     if i == int(len(binaryStringAudio) * 0.25):
-            #         print("Progress: 25%")
-            #     if i == int(len(binaryStringAudio) * 0.5):
-            #         print("Progress: 50%")
-            #     if i == int(len(binaryStringAudio) * 0.75):
-            #         print("Progress: 75%")
-            #     if i == len(binaryStringAudio) - 1:
-            #         print("Progress: 100%")
-            #     audioBitList.append(int(bit))
-            #     i += 1
-
         return audioBitList
 
     def countMessageLength(self, filePath):
         lengthOfAudio = os.path.getsize(filePath)
         return int((lengthOfAudio / 8) - 5)
+
+    def convertBinaryToAudio(self, encryptedFileBits, filePath):
+        # zde metoda, která je volána z MessageHelper::67, převede bity na soubor a uloží jej do stejné složky
+        # vrací plnou cestu k souboru
+
+
+        # cesta k uloženému souboru bude nazvaná coverFilePath
+        coverFilePath = "song - encrypted.mp3" # toto je zde dočasně jen jako kontrola, jestli pak funguje dekryptování
+        return coverFilePath

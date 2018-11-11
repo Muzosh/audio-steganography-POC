@@ -51,8 +51,8 @@ class MessageHelper:
             i += 1
 
         encryptedFileBits = coverFileBits
-
         # Pro kontrolu - Metoda sloužící k vypsání prvních (1200) osmých bitů ve finální audioFile v bitech
+        # Mělo by tedy být stejné jako původní messageBits
         # (např.[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ...])
         # string2 = []
         # i = 1
@@ -64,11 +64,12 @@ class MessageHelper:
         #     i += 1
         # print(string2)
 
-        # encryptedFileBits bude finální list bitů, zbývá jej převést zpět na zvukový soubor a uložit
-        # cesta k uloženému souboru bude nazvaná coverFilePath
-        # na konec poresit return
-        coverFilePath = "song - encrypted.mp3"
-        return coverFilePath
+        return self.ah.convertBinaryToAudio(encryptedFileBits, filePath)
+
+    def decodeMessageFromCoverFile(self, coverFilePath):
+        message = "my message"
+        coverFilePath = self.ah.convertAudioToBinary(coverFilePath)
+        return message
 
     def tobits(self, str):
         """
