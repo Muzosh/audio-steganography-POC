@@ -1,5 +1,3 @@
-import binascii
-import os
 import wave
 
 

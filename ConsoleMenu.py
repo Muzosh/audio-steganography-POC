@@ -1,4 +1,3 @@
-import wave
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename
 from MessageHelper import MessageHelper
@@ -90,4 +89,4 @@ class ConsoleMenu:
         else:
             return
 
-        print("Your encrypted message in chosen file is: " + encryptedMessage)
+        print("\nYour encrypted message in chosen file is: " + encryptedMessage)
