@@ -41,8 +41,8 @@ class ConsoleMenu:
         Method which is called by choosing 1.Encode in main menu
         """
 
-        # Tk().withdraw()
-        # audioFilePath = askopenfilename(initialdir="/", title="Select audio file", filetype=[("wav files", "*.wav")])
+        Tk().withdraw()
+        audioFilePath = askopenfilename(initialdir="/", title="Select audio file", filetype=[("wav files", "*.wav")])
         audioFilePath = "song.wav"
         if audioFilePath == '':
             print("\n\n")
