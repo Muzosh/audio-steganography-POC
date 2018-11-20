@@ -36,9 +36,9 @@ class MessageHelper:
 
         print(" -> Converting LSBs into message", end="")
         message = ""
-        for i in range(0, len(LSBlist), 16):         # take all LSBs and iterate through them by 8
+        for i in range(0, len(LSBlist), 16):        # take all LSBs and iterate through them by 8
 
-            intBinChunks = LSBlist[i:i+16]           # [0,1,0,1,0,0,1,1]
+            intBinChunks = LSBlist[i:i+16]          # [0,1,0,1,0,0,1,1]
 
             strBinChunks = map(str, intBinChunks)   # ['0','1','0','1','0','0','1','1']
 
@@ -73,7 +73,7 @@ class MessageHelper:
         bitArray = []
         for char in string:
 
-            charByte = bin(ord(char)).lstrip('0b').rjust(16, '0')    # "01100001"
+            charByte = bin(ord(char)).lstrip('0b').rjust(16, '0')   # "01100001"
 
             bitArray.append(charByte)                               # ["01100001", "01101000",...]
 
