@@ -1,3 +1,5 @@
+import ConsoleMenu
+
 class MessageHelper:
     """
     Class for methods of message input.
@@ -14,11 +16,11 @@ class MessageHelper:
         :return: bytes of audio file with encrypted message
         """
 
-        print("\nProgress: converting your message into bits", end="")
+        print("\n\tProgress: Converting your message into bits", end="")
         message = message + "#"
         messageBits = self.toBits(message)
 
-        print(" -> encoding your message into the cover file", end="")
+        print(" -> Encoding your message into the cover file", end="")
         i = 0
         for bit in messageBits:
             songBytes[i] = (songBytes[i] & 254) | bit
@@ -29,20 +31,20 @@ class MessageHelper:
 
     def decodeMessageFromCoverFile(self, songBytes):
 
-        print("\nProgress: Reading all LSBs", end="")
+        print("\n\tProgress: Reading all LSBs", end="")
         LSBlist = []
         for i in range(len(songBytes)):
             LSBlist.append(songBytes[i] & 1)
 
         print(" -> Converting LSBs into message", end="")
         message = ""
-        for i in range(0, len(LSBlist), 16):        # take all LSBs and iterate through them by 8
+        for i in range(0, len(LSBlist), 16):        # take all LSBs and iterate through them by 16
 
-            intBinChunks = LSBlist[i:i+16]          # [0,1,0,1,0,0,1,1]
+            intBinChunks = LSBlist[i:i+16]          # [0,...,0,1,0,1,0,0,1,1]
 
-            strBinChunks = map(str, intBinChunks)   # ['0','1','0','1','0','0','1','1']
+            strBinChunks = map(str, intBinChunks)   # ['0',...,'0','1','0','1','0','0','1','1']
 
-            charInBinary = "".join(strBinChunks)    # "01010011"
+            charInBinary = "".join(strBinChunks)    # "0...01010011"
 
             charUnicode = int(charInBinary, 2)      # 83
 
