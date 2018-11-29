@@ -25,7 +25,7 @@ class MessageHelper:
         messageBits = self.toBits(message)
 
         print(" -> Encoding your message into the cover file", end="")
-        LSB = False
+        LSB = True
         if LSB:
             i = 0
             for bit in messageBits:
