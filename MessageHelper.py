@@ -1,11 +1,12 @@
-import ConsoleMenu
+import struct
+
 
 class MessageHelper:
     """
     Class for methods of message input.
     """
 
-    def encodeMessageIntoCoverFile(self, message, songBytes):
+    def encodeMessageIntoCoverFile(self, message, songBytes, fillAll):
         """
         Method for encoding message into cover file (audio file).
         Using method LSB - Last Significant Bit.
@@ -17,14 +18,28 @@ class MessageHelper:
         """
 
         print("\n\tProgress: Converting your message into bits", end="")
-        message = message + "#"
+        if not fillAll:
+            message = "#" + message + "#"
+        else:
+            message = "#" + message + (self.countMessageLength(songBytes)-len(message)-1) * '#'
         messageBits = self.toBits(message)
 
         print(" -> Encoding your message into the cover file", end="")
-        i = 0
-        for bit in messageBits:
-            songBytes[i] = (songBytes[i] & 254) | bit
-            i += 1
+        LSB = False
+        if LSB:
+            i = 0
+            for bit in messageBits:
+                songBytes[i] = (songBytes[i] & 254) | bit
+                i += 1
+        else:
+            i = 0
+            for x in songBytes:
+                temp = ord(x)
+                temp = bin(temp)[2:].rjust(8, '0')
+                temp[3] = messageBits[i]
+                temp[7] = messageBits[i+1]
+                bytes(temp)
+                i += 1
 
         print(" -> Finished!")
         return bytes(songBytes)
@@ -37,6 +52,7 @@ class MessageHelper:
             LSBlist.append(songBytes[i] & 1)
 
         print(" -> Converting LSBs into message", end="")
+        secondHashTag = False
         message = ""
         for i in range(0, len(LSBlist), 16):        # take all LSBs and iterate through them by 16
 
@@ -48,12 +64,21 @@ class MessageHelper:
 
             charUnicode = int(charInBinary, 2)      # 83
 
-            char = chr(charUnicode)                 # 'S'
+            char = chr(charUnicode)                 # 'S' "#ahoj#
 
             message = message + char                # "...S"
-        print(" -> Finished")
 
-        return message.split("#")[0]
+            if char == '#' and not secondHashTag:
+                secondHashTag = True
+                continue
+            elif char == '#' and secondHashTag:
+                break
+        print(" -> Finished")
+        if message[0] == '#':
+            return message.split('#')[1]
+        else:
+            raise SyntaxError
+
 
     def countMessageLength(self, songBytes):
         """
@@ -63,7 +88,7 @@ class MessageHelper:
         :return: integer
         """
 
-        return int(len(songBytes) / 16) - 1
+        return int(len(songBytes) / 16) - 2
 
     def toBits(self, string):
         """
