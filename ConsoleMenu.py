@@ -1,6 +1,7 @@
 import pygame
 import os
 import sys
+import wave
 from MessageHelper import MessageHelper
 from AudioHelper import AudioHelper
 
@@ -21,7 +22,7 @@ class ConsoleMenu:
         while True:
             try:
                 self.lineSeparator()
-                menu = int(input("\nMAIN MENU:\n\t1: Encode\n\t2: Decode\n\t3: Open AudioPlayer\n\t4: Exit\nYour choice: "))
+                menu = int(input("\nMAIN MENU:\n\t1: Encode\n\t2: Decode\n\t3: Open custom AudioPlayer\n\t4: Exit\nYour choice: "))
 
                 if menu == 1:
                     self.__encodeMethod()
@@ -62,7 +63,19 @@ class ConsoleMenu:
             print(" -> File was not found. Process has ended!")
             return
 
-        maxLength = self.mh.countMessageLength(songBytes)
+        everyNByte = 0
+        self.lineSeparator()
+        print("\nUse the LSB of every N-st/nd/rd/th byte. Please specify N: ", end="")
+        while True:
+            try:
+                everyNByte = int(input())
+                maxLength = self.mh.countMessageLength(songBytes, everyNByte)
+                if maxLength <= 0:
+                    print("Chosen file is not big enough to use LSB of every %dth byte!\nPlease specify new N: " %everyNByte, end="")
+                    continue
+                break
+            except ValueError:
+                print("Wrong value inserted! Please enter only number: ", end="")
 
         self.lineSeparator()
         message = input(
@@ -77,17 +90,17 @@ class ConsoleMenu:
         self.lineSeparator()
         opt = input("\nWould you like to fill full audio with LSB? (yes/no): ")
         while True:
-            if opt == 'yes':
+            if opt.lower() == 'yes':
                 fillAll = True
                 break
-            elif opt == 'no':
+            elif opt.lower() == 'no':
                 fillAll = False
                 break
             else:
                 opt = input("Please write 'yes' or 'no': ")
         try:
-            encryptedSongBytes = self.mh.encodeMessageIntoCoverFile(message, songBytes, fillAll)
-            self.ah.convertBytesToAudio(encryptedSongBytes, audioFilePath, fillAll)
+            encryptedSongBytes = self.mh.encodeMessageIntoCoverFile(message, songBytes, fillAll, everyNByte)
+            self.ah.convertBytesToAudio(encryptedSongBytes, audioFilePath, fillAll, everyNByte)
 
             print(
                 "\nMessage encoding into audio file was successful! "
@@ -116,19 +129,32 @@ class ConsoleMenu:
             print("\nNo file with such a number. Process has ended!")
             return
 
+        eachNByte = 0
+        self.lineSeparator()
+        print("\nDecode the LSB of every N-st/nd/rd/th byte. Please specify N: ", end="")
+        while True:
+            try:
+                eachNByte = int(input())
+                break
+            except ValueError:
+                print("Wrong value inserted! Please enter only number: ", end="")
+
         try:
             songBytes = self.ah.openAudioFile(audioFilePath)
-        except :
+        except wave.Error:
             print(" -> File was not found. Process has ended!")
             return
 
         try:
-            encryptedMessage = self.mh.decodeMessageFromCoverFile(songBytes)
+            encryptedMessage = self.mh.decodeMessageFromCoverFile(songBytes, eachNByte)
         except SyntaxError:
-            print("\nThere is no encrypted message in chosen file. Process has ended!")
+            print("\n\nThere is no encrypted message in chosen file. Process has ended!")
+            return
+        except InterruptedError:
+            print("\n\nSomething went wrong and first character is not '#'. Process has ended!")
             return
 
-        print("\nYour encrypted message in chosen file is:\n\t" + encryptedMessage)
+        print("\n\nYour encrypted message in chosen file is:\n\t" + encryptedMessage)
 
     def play(self):
         self.lineSeparator()
@@ -152,7 +178,7 @@ class ConsoleMenu:
 
     def getAndShowFileList(self, onlyEncrypted):
         if onlyEncrypted:
-            fileList = list(filter(lambda x: "-encrypted.wav" in x or "-fullyEncrypted.wav" in x,
+            fileList = list(filter(lambda x: "-encrypted" in x or "-fullyEncrypted" in x,
                                    os.listdir(os.path.dirname(sys.modules['__main__'].__file__)+"/wavSamples/")))
         elif onlyEncrypted == None:
             fileList = list(filter(lambda x: ".wav" in x,
