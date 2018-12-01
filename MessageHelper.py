@@ -6,7 +6,7 @@ class MessageHelper:
     Class for methods of message input.
     """
 
-    def encodeMessageIntoCoverFile(self, message, songBytes, fillAll, eachNByte):
+    def encodeMessageIntoCoverFile(self, message, songBytes, fillAll):
         """
         Method for encoding message into cover file (audio file).
         Using method LSB - Last Significant Bit.
@@ -21,57 +21,66 @@ class MessageHelper:
         if not fillAll:
             message = "#" + message + "#"
         else:
-            message = "#" + message + (self.countMessageLength(songBytes, eachNByte) - len(message) - 1) * '#'
+            message = "#" + message + (self.countMessageLength(songBytes)-len(message)-1) * '#'
         messageBits = self.toBits(message)
 
         print(" -> Encoding your message into the cover file", end="")
-
-        i = 0
-        for bit in messageBits:
-            songBytes[i*eachNByte] = (songBytes[i*eachNByte] & 254) | bit
-            i += 1
+        LSB = True
+        if LSB:
+            i = 0
+            for bit in messageBits:
+                songBytes[i] = (songBytes[i] & 254) | bit
+                i += 1
+        else:
+            i = 0
+            for x in songBytes:
+                temp = ord(x)
+                temp = bin(temp)[2:].rjust(8, '0')
+                temp[3] = messageBits[i]
+                temp[7] = messageBits[i+1]
+                bytes(temp)
+                i += 1
 
         print(" -> Finished!")
         return bytes(songBytes)
 
-    def decodeMessageFromCoverFile(self, songBytes, eachNByte):
+    def decodeMessageFromCoverFile(self, songBytes):
+
         print("\n\tProgress: Reading all LSBs", end="")
         LSBlist = []
-        for i in range(int(len(songBytes)/eachNByte)):
-            LSBlist.append(songBytes[i*eachNByte] & 1)
+        for i in range(len(songBytes)):
+            LSBlist.append(songBytes[i] & 1)
 
         print(" -> Converting LSBs into message", end="")
         secondHashTag = False
         message = ""
-        for i in range(0, len(LSBlist), 16):  # take all LSBs and iterate through them by 16
+        for i in range(0, len(LSBlist), 16):        # take all LSBs and iterate through them by 16
 
-            intBinChunks = LSBlist[i:i + 16]  # [0,...,0,1,0,1,0,0,1,1]
+            intBinChunks = LSBlist[i:i+16]          # [0,...,0,1,0,1,0,0,1,1]
 
-            strBinChunks = map(str, intBinChunks)  # ['0',...,'0','1','0','1','0','0','1','1']
+            strBinChunks = map(str, intBinChunks)   # ['0',...,'0','1','0','1','0','0','1','1']
 
-            charInBinary = "".join(strBinChunks)  # "0...01010011"
+            charInBinary = "".join(strBinChunks)    # "0...01010011"
 
-            charUnicode = int(charInBinary, 2)  # 83
+            charUnicode = int(charInBinary, 2)      # 83
 
-            char = chr(charUnicode)  # 'S' "#ahoj#
+            char = chr(charUnicode)                 # 'S' "#ahoj#
 
-            message = message + char  # "...S"
+            message = message + char                # "...S"
 
             if char == '#' and not secondHashTag:
                 secondHashTag = True
                 continue
             elif char == '#' and secondHashTag:
                 break
-            elif not secondHashTag:
-                raise InterruptedError
-
         print(" -> Finished")
         if message[0] == '#':
             return message.split('#')[1]
         else:
             raise SyntaxError
 
-    def countMessageLength(self, songBytes, eachNByte):
+
+    def countMessageLength(self, songBytes):
         """
         Auxiliary method for counting message length
 
@@ -79,7 +88,7 @@ class MessageHelper:
         :return: integer
         """
 
-        return int(len(songBytes) / (16*eachNByte)) - 2
+        return int(len(songBytes) / 16) - 2
 
     def toBits(self, string):
         """
@@ -90,10 +99,11 @@ class MessageHelper:
         """
         bitArray = []
         for char in string:
-            charByte = bin(ord(char)).lstrip('0b').rjust(16, '0')  # "01100001"
 
-            bitArray.append(charByte)  # ["01100001", "01101000",...]
+            charByte = bin(ord(char)).lstrip('0b').rjust(16, '0')   # "01100001"
 
-        bitArray = ''.join(bitArray)  # "0110000101101000..."
+            bitArray.append(charByte)                               # ["01100001", "01101000",...]
 
-        return list(map(int, bitArray))  # [0,1,1,0,0,0,0,1,0,1,1,0,1,0,0,0,...]
+        bitArray = ''.join(bitArray)                                # "0110000101101000..."
+
+        return list(map(int, bitArray))                             # [0,1,1,0,0,0,0,1,0,1,1,0,1,0,0,0,...]
