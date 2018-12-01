@@ -6,18 +6,15 @@ from MessageHelper import MessageHelper
 from AudioHelper import AudioHelper
 
 class ConsoleMenu:
-    """
-    Class ConsoleMenu show menu in console and call methods of another classes
-    """
     def __init__(self):
         self.ah = AudioHelper()
         self.mh = MessageHelper()
         self.__menu()
 
-    # main menu
     def __menu(self):
         """
-        contain main menu
+        Main console menu
+        :return: None
         """
         while True:
             try:
@@ -31,7 +28,7 @@ class ConsoleMenu:
                     self.__decodeMethod()
 
                 elif menu == 3:
-                    self.play()
+                    self.__play()
 
                 elif menu == 4:
                     exit()
@@ -43,23 +40,24 @@ class ConsoleMenu:
 
     def __encodeMethod(self):
         """
-        Method which is called by choosing 1.Encode in main menu
+        Metoda pro komunikaci s uživatelem. Zjišťují se parametry potřebné ke správnému zakódování.
+        :return: None
         """
-
         self.lineSeparator()
         fileList = self.getAndShowFileList(False)
         audioFilePath = input("Please write path of .wav file or write number of chosen file: ")
 
         try:
             if self.representsInt(audioFilePath):
-                audioFilePath = os.path.dirname(sys.modules['__main__'].__file__) + "/wavSamples/" + fileList[int(audioFilePath) - 1]
+                audioFilePath = os.path.dirname(sys.modules['__main__'].__file__) +\
+                                "/wavSamples/" + fileList[int(audioFilePath) - 1]
         except IndexError:
             print("\nNo file with such a number. Process has ended!")
             return
 
         try:
             songBytes = self.ah.openAudioFile(audioFilePath)
-        except :
+        except:
             print(" -> File was not found. Process has ended!")
             return
 
@@ -81,7 +79,6 @@ class ConsoleMenu:
         message = input(
             "\nYou can use %d characters for your secret message.\n\t"
             "Be aware, you can't use character '#'.\n\tPlease, write your message: " % maxLength)
-
 
         while len(message) > maxLength:
             message = input(
@@ -116,9 +113,7 @@ class ConsoleMenu:
 
 
     def __decodeMethod(self):
-        """
-        Method which is called by choosin 2. Decode in main menu
-        """
+
         self.lineSeparator()
         fileList = self.getAndShowFileList(True)
         audioFilePath = input("Please write path of .wav file or write number of chosen file: ")
@@ -156,7 +151,7 @@ class ConsoleMenu:
 
         print("\n\nYour encrypted message in chosen file is:\n\t" + encryptedMessage)
 
-    def play(self):
+    def __play(self):
         self.lineSeparator()
         fileList = self.getAndShowFileList(None)
         audioFilePath = input("Please write path of .wav file or write number of chosen file: ")
@@ -177,14 +172,19 @@ class ConsoleMenu:
             return
 
     def getAndShowFileList(self, onlyEncrypted):
+        """
+
+        :param onlyEncrypted:
+        :return:
+        """
         if onlyEncrypted:
-            fileList = list(filter(lambda x: "-encrypted" in x or "-fullyEncrypted" in x,
+            fileList = list(filter(lambda x: "-encrypted" in x or "-encrypted-filled" in x,
                                    os.listdir(os.path.dirname(sys.modules['__main__'].__file__)+"/wavSamples/")))
         elif onlyEncrypted == None:
             fileList = list(filter(lambda x: ".wav" in x,
                                    os.listdir(os.path.dirname(sys.modules['__main__'].__file__)+"/wavSamples/")))
         else:
-            fileList = list(filter(lambda x: ".wav" in x and "-encrypted" not in x and "-fullyEncrypted.wav" not in x,
+            fileList = list(filter(lambda x: ".wav" in x and "-encrypted" not in x and "-encrypted-filled.wav" not in x,
                                    os.listdir(os.path.dirname(sys.modules['__main__'].__file__)+"/wavSamples/")))
         print()
         i = 1

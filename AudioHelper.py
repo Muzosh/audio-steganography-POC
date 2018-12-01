@@ -4,27 +4,18 @@ from pygame import mixer
 
 
 class AudioHelper:
-    """
-    Class AudioHelper contain methods which work with cover file (audio file).
-    """
-    def openAudioFile(self, audioFilePath):
-        """
 
-        :param audioFilePath:
-        :return: individual bytes of audio
-        """
+    def openAudioFile(self, audioFilePath):
         print("\n\tProgress: Opening chosen file", end="")
-        with wave.open(audioFilePath, mode='rb') as oldFile:
+        with wave.open(audioFilePath, mode='rb') as audioFile:
             print(" -> Reading song frames", end="")
-            songFrames = oldFile.readframes(oldFile.getnframes())
+            songFrames = audioFile.readframes(audioFile.getnframes())
             print(" -> Writing song frames into array", end="")
             songBytes = bytearray(list(songFrames))
             print(" -> Finished!")
             return songBytes
 
-
     def convertBytesToAudio(self, encryptedSongBytes, audioFilePath, fillAll, eachNByte):
-
         print("\n\tProgress: Opening old file in order to get song parameters", end="")
         song = wave.open(audioFilePath, mode='rb')
         if not fillAll:
