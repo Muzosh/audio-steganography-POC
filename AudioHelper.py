@@ -23,14 +23,14 @@ class AudioHelper:
             return songBytes
 
 
-    def convertBytesToAudio(self, encryptedSongBytes, audioFilePath, fillAll):
+    def convertBytesToAudio(self, encryptedSongBytes, audioFilePath, fillAll, eachNByte):
 
         print("\n\tProgress: Opening old file in order to get song parameters", end="")
         song = wave.open(audioFilePath, mode='rb')
         if not fillAll:
-            newAudioFilePath = audioFilePath[:-4] + "-encrypted.wav"
+            newAudioFilePath = audioFilePath[:-4] + "-encrypted-not-filled-every-{}.-LSB.wav".format(eachNByte)
         else:
-            newAudioFilePath = audioFilePath[:-4] + "-fullyEncrypted.wav"
+            newAudioFilePath = audioFilePath[:-4] + "-encrypted-filled-every-{}.-LSB.wav".format(eachNByte)
         print(" -> Writing into new audio file", end="")
         with wave.open(newAudioFilePath, 'wb') as newFile:
             newFile.setparams(song.getparams())
