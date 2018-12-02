@@ -4,8 +4,19 @@ from pygame import mixer
 
 
 class AudioHelper:
-
+    """
+    Třída sloužící k práci se zvukovým souborem. Otevřít zvukový soubor, konvertovat byty na zvukový soubor a
+    jednoduchý audio player.
+    """
     def openAudioFile(self, audioFilePath):
+        """
+        Metoda sloužící k otevření zvukového .wav souboru. Otevře soubor a do proměnné songFrames zapíše jednotlivé
+        framy souboru. Následně se pouze framy překonvertují na list bytů, který se následně vrací
+        :param audioFilePath: Absolutní, či relativní cesta k souboru. Pokud uživatel pouze zadá jméno souboru s
+            příponou, tento soubor pak musí existovat ve stejné složce jako je projekt. Pokud uživatel vybral soubor
+            pomocí číselného výběru, do parametru se vkládá aboslutní cesta.
+        :return: Vrací pole bytů, ze tkerých se zvukový soubor skládá
+        """
         print("\n\tProgress: Opening chosen file", end="")
         with wave.open(audioFilePath, mode='rb') as audioFile:
             print(" -> Reading song frames", end="")
@@ -16,6 +27,20 @@ class AudioHelper:
             return songBytes
 
     def convertBytesToAudio(self, encryptedSongBytes, audioFilePath, fillAll, eachNByte):
+        """
+        Metoda sloužící k převedení již upravených bytů (tedy se zkrytou zprávou) zpět na zvukový soubor.
+        Prvně se otevře ještě starý soubor, což je nutné k získání původních parametrů písničky (což je potřebná součást
+        správného přehrání .wav souboru). Následně se díky pomocných parametrů zjistí nová absolutní cesta k souboru
+        ([:-4] je tam kvůli odstranění přípony .wav). Potom se pomocí knihovny wave nastaví souboru staré parametry
+        (chceme, aby zůstaly stejné) a zapíšou se framy pomocí metody, která přijímá vstup jako pole bytů.
+        :param encryptedSongBytes: Stream bytů, kde už je na správných místech dosazena správná sekvence bitů, které
+            dohromady dávají skrytou zprávu
+        :param audioFilePath: absoutní cesta k původnímu zvukovému souboru
+        :param fillAll: Boolean, který udává, jestli uživatel na začátku zvolil, jestli se má soubor kódovat až do konce
+        :param eachNByte: Integer, který udává, na každý kolikátý byte se zpráva zapsala (tohle je čistě pro nás, aby
+            bylo jednodušší ověřit funkčnost souboru
+        :return: Nic, metoda je void
+        """
         print("\n\tProgress: Opening old file in order to get song parameters", end="")
         song = wave.open(audioFilePath, mode='rb')
         if not fillAll:
@@ -30,6 +55,12 @@ class AudioHelper:
         print(" -> Finished!")
 
     def audioPlayer(self, audioFilePath):
+        """
+        Jednoduchý hudební přehrávač přímo v konzoli. Pomocí wave se získají parametry souboru, který chceme přehrát,
+        aby se mohly naparsovat do pygame.music.init(), díky kterému pak soubor můžeme přehrát.
+        :param audioFilePath: Absolutní cesta k souboru
+        :return: Nic, metoda je void
+        """
         with wave.open(audioFilePath, mode='r') as audio:
             songParams = audio.getparams()
 

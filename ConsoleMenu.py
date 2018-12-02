@@ -5,7 +5,14 @@ import wave
 from MessageHelper import MessageHelper
 from AudioHelper import AudioHelper
 
+
 class ConsoleMenu:
+    """
+    Vše potřebné pro komunikaci s uživatelem. Logika se provádí ve třídách Audio a Message Helper,
+    které se inicializují v konstruktoruů. Všechny výjimky se zachycují zde, kde se uživateli vypíše, co bylo za
+    problém. V samotných Helperech se do konzole pouze vypisuje určitý progress, aby bylo vidět, který proces trvá
+    nejdéle a jak dlouho trvá v závislosti na velikosti souboru.
+    """
     def __init__(self):
         self.ah = AudioHelper()
         self.mh = MessageHelper()
@@ -13,8 +20,8 @@ class ConsoleMenu:
 
     def __menu(self):
         """
-        Main console menu
-        :return: None
+        Hlavní konzolové menu
+        :return: Nic, metoda je void
         """
         while True:
             try:
@@ -41,7 +48,14 @@ class ConsoleMenu:
     def __encodeMethod(self):
         """
         Metoda pro komunikaci s uživatelem. Zjišťují se parametry potřebné ke správnému zakódování.
-        :return: None
+        Prvně se vypíše seznam použitelných souborů ve složce wavSamples (+ kontrola, jestli uživatel zadal
+        číslo nebo absolutní cestu k souboru.
+        Následně se zjistí, na každý kolikáty byte chce uživatel zapisovat. Poté se zjistí maximální možná délka
+        zprávy a vyzve se k zadání zprávy. Ještě se metoda zeptá uživatele, jestli bude chtít zapsat zprávu pouze na
+        začátek zvukového souboru nebo jestli chce přepsat úplně každý vybraný byte až do konce souboru.
+        Nakonec se zavolají dvě hlavní metody pro kódování: metoda pro vepsání zprávy do bytů a metoda pro převedení
+        bytů zpět na zvukový soubor.
+        :return: Nic, metoda je void
         """
         self.lineSeparator()
         fileList = self.getAndShowFileList(False)
@@ -61,7 +75,6 @@ class ConsoleMenu:
             print(" -> File was not found. Process has ended!")
             return
 
-        everyNByte = 0
         self.lineSeparator()
         print("\nUse the LSB of every N-st/nd/rd/th byte. Please specify N: ", end="")
         while True:
@@ -110,10 +123,16 @@ class ConsoleMenu:
         except FileExistsError:
             print(" -> File already exists. Process has ended!")
 
-
-
     def __decodeMethod(self):
-
+        """
+        Metoda pro komunikaci s uživatelem. Zjišťují se parametry potřebné ke správnému dekódování.
+        Prvně se vypíše seznam použitelných souborů ve složce wavSamples (+ kontrola, jestli uživatel zadal
+        číslo nebo absolutní cestu k souboru.
+        Následně se zjistí, každý kolikátý byte chce uživatel dekódovat (v našem projektu tato informace bude přímo v
+        názvu souborum, v reálném použití by to však mohlo zvýšit bezpečnost steganografie). Nakonec se soubor otevře
+        a otevřené byty se předají jako parametr metodě, která soubor dekóduje a pokud možno, zobrazí skrytou zprávu.
+        :return: Nic, metoda je void
+        """
         self.lineSeparator()
         fileList = self.getAndShowFileList(True)
         audioFilePath = input("Please write path of .wav file or write number of chosen file: ")
@@ -124,7 +143,6 @@ class ConsoleMenu:
             print("\nNo file with such a number. Process has ended!")
             return
 
-        eachNByte = 0
         self.lineSeparator()
         print("\nDecode the LSB of every N-st/nd/rd/th byte. Please specify N: ", end="")
         while True:
@@ -146,12 +164,17 @@ class ConsoleMenu:
             print("\n\nThere is no encrypted message in chosen file. Process has ended!")
             return
         except InterruptedError:
-            print("\n\nSomething went wrong and first character is not '#'. Process has ended!")
+            print("\n\nNo secret message was found. Process has ended!")
             return
 
         print("\n\nYour encrypted message in chosen file is:\n\t" + encryptedMessage)
 
     def __play(self):
+        """
+        Metoda, která nejprve zobrazí použitelné soubory a dá uživateli na výběr. Následně zavolá metodu sloužící
+        k přehrávání souborů s jednoduchým konzolovým rozhraním.
+        :return: Nic, metoda je void
+        """
         self.lineSeparator()
         fileList = self.getAndShowFileList(None)
         audioFilePath = input("Please write path of .wav file or write number of chosen file: ")
@@ -173,9 +196,10 @@ class ConsoleMenu:
 
     def getAndShowFileList(self, onlyEncrypted):
         """
-
-        :param onlyEncrypted:
-        :return:
+        Tato metoda získá list všech souborů ve složce wavSample na základě parametru. List následně vypíše a vrátí
+        :param onlyEncrypted: Boolean, který určuje, jaké konkrétní soubory chceme do listu získat. Pro každou metodu
+            volající tuhle metodu se hodí totiž jiné soubory. Jednoduše se to pomocí podmínek naparsuje do listu.
+        :return: Vrací list stringů, ve kterých jsou názvy použitelných souborů v projektové složce.
         """
         if onlyEncrypted:
             fileList = list(filter(lambda x: "-encrypted" in x or "-encrypted-filled" in x,
@@ -194,6 +218,12 @@ class ConsoleMenu:
         return fileList
 
     def representsInt(self, s):
+        """
+        Jednoduchý equivalent int.TryParse(string s) z jiných jazyků. Pokusí se do intu naparsovat string a pokud se
+        to podaří, vrátí True, pokud ne, vrátí False
+        :param s: Vstupní string, který zkoušíme naparsovat do integeru.
+        :return: Vrací boolean hodnotu na základě toho, jestli string lze naparsovat.
+        """
         try:
             int(s)
             return True
@@ -202,5 +232,9 @@ class ConsoleMenu:
 
     @staticmethod
     def lineSeparator():
+        """
+        Jednoduchá metoda sloužící ke zkrášlení a zlepšení přehlednosti v konzolovém rozhraní.
+        :return: Nic, metoda je void
+        """
         print("----------------------------------------------------------"
               "----------------------------------------------------------", end="")
