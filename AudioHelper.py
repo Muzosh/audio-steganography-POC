@@ -88,9 +88,9 @@ class AudioHelper:
                 mixer.music.stop()
                 mixer.music.play(-1)
             elif opt == '4' or opt.lower() == 'volume up' or opt.lower() == 'increase volume':
-                mixer.music.set_volume(mixer.music.get_volume() + 0.1)
+                mixer.music.set_volume(mixer.music.get_volume() + 0.05)
             elif opt == '5' or opt.lower() == 'volume down' or opt.lower() == 'decrease volume':
-                mixer.music.set_volume(mixer.music.get_volume() - 0.1)
+                mixer.music.set_volume(mixer.music.get_volume() - 0.05)
             elif opt == '6':
                 mixer.music.fadeout(1000)
                 return

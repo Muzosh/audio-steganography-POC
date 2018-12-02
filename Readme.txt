@@ -29,7 +29,7 @@ Instrukce k programu:
 		2: Decode
 		3: Open custom AudioPlayer
 		4: Exit
-		
+
 	Vše samozřejmě funguje zádáním čísla (té možnosti) do konzole, kde se nám otevře dodatečná nabídka.
 	
 	Následující možnosti:
