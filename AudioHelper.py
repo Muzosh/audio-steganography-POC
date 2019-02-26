@@ -41,6 +41,7 @@ class AudioHelper:
             bylo jednodušší ověřit funkčnost souboru
         :return: Nic, metoda je void
         """
+
         print("\n\tProgress: Opening old file in order to get song parameters", end="")
         song = wave.open(audioFilePath, mode='rb')
         if not fillAll:
