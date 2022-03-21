@@ -8,11 +8,11 @@ frame_bytes = bytearray(list(song.readframes(song.getnframes()))) # getnframes =
 # The "secret" text message
 string='Peter Parker is the Spiderman!'
 # Append dummy data to fill out rest of the bytes. Receiver shall detect and remove these characters.
-string = string + int((len(frame_bytes)-(len(string)*8*8))/8) *'#' # např. 'Peter Parker is the Spiderman!#################'
+string = string + int((len(frame_bytes)-(len(string)*8*8))/8) *'#' # 'Peter Parker is the Spiderman!#################'
 # Convert text to bit array
 bits = list(map(int, ''.join([bin(ord(i)).lstrip('0b').rjust(8,'0') for i in string])))
-#lstrip - odstrihne dany string ze zacatku
-#rjust - doplni na zacatek nuly aby bylo 8 bitu presne jedno pismeno
+#lstrip - strips specified string from the start
+#rjust - fills zeroes at the start so the that one letter is exactly 8 bits
 
 # Replace LSB of each byte (frame_bytes) of the audio data by one bit from the text bit array
 for i, bit in enumerate(bits):
