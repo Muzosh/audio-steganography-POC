@@ -51,10 +51,13 @@ class MessageHelper:
 
             char = chr(charUnicode)                 # 'S'
 
+            if char == "#":
+                break
+
             message = message + char                # "...S"
         print(" -> Finished")
         print(message)
-        return message.split("#")[0]
+        return message
 
     def countMessageLength(self, songBytes):
         """
